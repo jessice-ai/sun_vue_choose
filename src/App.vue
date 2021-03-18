@@ -13,17 +13,41 @@ import sun_center from "./components/sun_center.vue"
 import sun_bottom from "./components/sun_bottom.vue"
 export default {
   name: 'App',
+  //第二种，把数据存储在 localStorage 情况，页面刷新或者关闭,数据存储在客户端
   data(){
     return {
-      sun_data:[
-        {name:"黄渤","complete":true},
-        {name:"罗志祥","complete":false},
-        {name:"黄磊","complete":false},
-        {name:"张艺兴","complete":false},
-        {name:"孙红雷","complete":false}
-      ]
+      //从localStrorage读取数据sun_data
+      //window.localStrorage.getItem("sun_data_key") 是从文件中读取的一个json字符串
+      //JSON.parse 把json转化为数组
+      sun_data:JSON.parse(window.localStorage.getItem("sun_data_key") || '[]')
     }
   },
+  //监视
+  watch:{
+    //深度监视
+    sun_data:{
+      deep:true, //
+      handler:function(value){
+        //value 是数组
+        //将sun_data 最新的值保存在localStrorage中
+        window.localStorage.setItem('sun_data_key',JSON.stringify(value))
+      }
+    }
+  },
+  //第一种，不把数据存储在 localStorage 情况，页面刷新初始化更新
+  // data(){
+  //   return {
+  //     sun_data:[
+  //       {name:"黄渤","complete":true},
+  //       {name:"罗志祥","complete":false},
+  //       {name:"黄磊","complete":false},
+  //       {name:"张艺兴","complete":false},
+  //       {name:"孙红雷","complete":false}
+  //     ]
+  //   }
+  // },
+
+
   methods:{
     //增加一个函数,添加数据
     sun_add_item(val){
