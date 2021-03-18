@@ -26,7 +26,7 @@ export default {
   watch:{
     //深度监视
     sun_data:{
-      deep:true, //
+      deep:true, //标识设置深度监视
       handler:function(value){
         //value 是数组
         //将sun_data 最新的值保存在localStrorage中
