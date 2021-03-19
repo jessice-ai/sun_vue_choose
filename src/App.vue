@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <!-- 自定义组件之间通信/数据传递 函数/方法 (传递函数:sun_add_item给组件sun_top) -->
-    <sun_top ref="sun_top_head"/>
-    <sun_center :sun_data="sun_data" />
-    <sun_bottom :sun_delete_all="sun_delete_all" :sun_select_all="sun_select_all" :sun_data="sun_data"/>
+    
+      <sun_top ref="sun_top_head"/>
+      <sun_center :sun_data="sun_data" />
+      <sun_bottom :sun_delete_all="sun_delete_all" :sun_select_all="sun_select_all" :sun_data="sun_data"/>
+    
   </div>
 </template>
 
@@ -30,12 +32,13 @@ export default {
     //深度监视
     sun_data:{
       deep:true, //标识设置深度监视
-      handler:function(value){
-        //value 是数组
-        //将sun_data 最新的值保存在localStrorage中
-        //window.localStorage.setItem('sun_data_key',JSON.stringify(value))
-        storageUtil.saveData(value) //localStorage存储模块优化 三
-      }
+      // handler:function(value){
+      //   //value 是数组
+      //   //将sun_data 最新的值保存在localStrorage中
+      //   //window.localStorage.setItem('sun_data_key',JSON.stringify(value))
+      //   storageUtil.setData(value) //localStorage存储模块优化 三
+      // },
+      handler:storageUtil.setData //上面的handler部分可以缩写为这么一行
     }
   },
   //第一种，不把数据存储在 localStorage 情况，页面刷新初始化更新
@@ -50,9 +53,9 @@ export default {
   //     ]
   //   }
   // },
-
+  //声明周期函数，初始化时调用一次
   mounted(){
-    //
+
     //this.$on('sun_add_item',this.sun_add_item) 这种写法不对
     //this.$refs.sun_top_head 表示sun_top.vue组件
     //为sun_top.vue组件添加侦听，并指定回调函数
@@ -65,6 +68,31 @@ export default {
     pub_sub.subscribe("sun_delete_item",(msg,index)=>{
       this.sun_delete_item(index)
     })
+    //使用vue-resource插件实现get/post请求
+    //https://api.github.com/search/repositories?q=v&sort=stars
+    //const url = "http://localhost:8080/m.php"
+
+    const url = "https://api.github.com/search/repositories?q=v&sort=stars"
+    this.$http.get(url).then(
+      response=>{
+        //请求成功
+        
+        const sun = response.data["items"]
+        const shuzu =new Array(); //定义一维数组 
+        for(var i=0;i<sun.length;i++){ 
+          const arr = new Array();
+          arr["name"] = sun[i]["name"]
+          arr["complete"] = sun[i]["archived"]
+          shuzu[i] = arr
+        } 
+        //this.sunloading = 1;
+        console.log(shuzu)
+      },
+      reponse=>{
+        //请求失败
+        alert("请求失败!"+reponse.data)
+      }
+    )
   },
   methods:{
     //增加一个函数,添加数据

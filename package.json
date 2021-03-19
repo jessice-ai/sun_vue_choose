@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "pubsub-js": "^1.9.3",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -34,7 +33,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-mixed-spaces-and-tabs": "off"
+       "no-mixed-spaces-and-tabs":"off"
     }
   },
   "browserslist": [
