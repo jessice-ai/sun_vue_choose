@@ -12,6 +12,7 @@ import sun_top from "./components/sun_top.vue"
 import sun_center from "./components/sun_center.vue"
 import sun_bottom from "./components/sun_bottom.vue"
 import pub_sub from "pubsub-js"
+import storageUtil from "./utils/storageUtils.js" //localStorage存储模块优化 一
 export default {
   name: 'App',
   //第二种，把数据存储在 localStorage 情况，页面刷新或者关闭,数据存储在客户端
@@ -20,8 +21,8 @@ export default {
       //从localStrorage读取数据sun_data
       //window.localStrorage.getItem("sun_data_key") 是从文件中读取的一个json字符串
       //JSON.parse 把json转化为数组
-      sun_data:JSON.parse(window.localStorage.getItem("sun_data_key") || '[]')
-
+      //sun_data:JSON.parse(window.localStorage.getItem("sun_data_key") || '[]')
+      sun_data:storageUtil.readData() //localStorage存储模块优化 二
     }
   },
   //监视
@@ -32,7 +33,8 @@ export default {
       handler:function(value){
         //value 是数组
         //将sun_data 最新的值保存在localStrorage中
-        window.localStorage.setItem('sun_data_key',JSON.stringify(value))
+        //window.localStorage.setItem('sun_data_key',JSON.stringify(value))
+        storageUtil.saveData(value) //localStorage存储模块优化 三
       }
     }
   },
