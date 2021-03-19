@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul>
-      <sun_item v-for="(data,index) in sun_data" :key="index" :data="data" :index="index" :sun_delete_item="sun_delete_item"/> 
+      <sun_item v-for="(data,index) in sun_data" :key="index" :data="data" :index="index" /> 
     </ul>
   </div>
 </template>

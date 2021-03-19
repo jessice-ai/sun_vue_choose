@@ -8,11 +8,7 @@
 export default {
 	//接收组件
 	props:{
-		// sun_add_item 传过来的函数名称
-		sun_add_item:{
-			type:Function, // 指定 sun_add_item 类型为函数
-			required:true //指定必要性
-		}
+
 	},
 	data(){
 		return {
@@ -28,10 +24,9 @@ export default {
 				return 
 			}
 			const data = {"name":title,complete:false}
-			this.sun_add_item(data)
-			//将输入对象添加到sun_data中
-			//清楚输入框
-			//alert("aaa")
+			//this.sun_add_item(data)
+			//触发自定义事件 sun_add_item  data是传递参数
+			this.$emit('sun_add_item',data)
 		}
 	}
 }

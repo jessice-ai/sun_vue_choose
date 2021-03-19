@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <!-- 把方法 sun_add_item 传递给组件 -->
-    <sun_top :sun_add_item="sun_add_item"/>
-    <sun_center :sun_data="sun_data" :sun_delete_item="sun_delete_item"/>
+    <!-- 自定义组件之间通信/数据传递 函数/方法 (传递函数:sun_add_item给组件sun_top) -->
+    <sun_top ref="sun_top_head"/>
+    <sun_center :sun_data="sun_data" />
     <sun_bottom :sun_delete_all="sun_delete_all" :sun_select_all="sun_select_all" :sun_data="sun_data"/>
   </div>
 </template>
@@ -11,6 +11,7 @@
 import sun_top from "./components/sun_top.vue"
 import sun_center from "./components/sun_center.vue"
 import sun_bottom from "./components/sun_bottom.vue"
+import pub_sub from "pubsub-js"
 export default {
   name: 'App',
   //第二种，把数据存储在 localStorage 情况，页面刷新或者关闭,数据存储在客户端
@@ -20,6 +21,7 @@ export default {
       //window.localStrorage.getItem("sun_data_key") 是从文件中读取的一个json字符串
       //JSON.parse 把json转化为数组
       sun_data:JSON.parse(window.localStorage.getItem("sun_data_key") || '[]')
+
     }
   },
   //监视
@@ -47,7 +49,21 @@ export default {
   //   }
   // },
 
+  mounted(){
+    //
+    //this.$on('sun_add_item',this.sun_add_item) 这种写法不对
+    //this.$refs.sun_top_head 表示sun_top.vue组件
+    //为sun_top.vue组件添加侦听，并指定回调函数
+    this.$refs.sun_top_head.$on('sun_add_item',this.sun_add_item)
 
+    //订阅消息: 两个参数, sun_delete_item 消息订阅名称 msg 暂时没用 index 是传递过来的值
+    // pub_sub.subscribe("sun_delete_item",function(msg,index){
+    //   this.sun_add_item(index)
+    // })
+    pub_sub.subscribe("sun_delete_item",(msg,index)=>{
+      this.sun_delete_item(index)
+    })
+  },
   methods:{
     //增加一个函数,添加数据
     sun_add_item(val){

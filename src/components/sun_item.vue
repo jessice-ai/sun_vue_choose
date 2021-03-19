@@ -6,18 +6,20 @@
 </template>
 
 <script>
+	import pubsub from 'pubsub-js'
 export default {
 	props:{
 		data:Object,
-		index:Number,
-		sun_delete_item:Function
+		index:Number
 	},
 	methods:{
 	    sun_delete(){
 	      // {} = this 解构赋值
-	      const {index,sun_delete_item} = this
+	      const {index} = this
 	      if(confirm("确定要删除吗?")){
-	      	sun_delete_item(index)
+	      	//sun_delete_item(index)
+	      	//发布消息,第一个参数消息名,第二个参数传递一个下标
+	      	pubsub.publish("sun_delete_item",index)
 	      }
 	    }
 	 }
